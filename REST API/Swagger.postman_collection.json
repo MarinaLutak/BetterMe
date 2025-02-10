@@ -1,0 +1,178 @@
+{
+	"info": {
+		"_postman_id": "7da32f3a-be31-451f-94db-d25c3feab57b",
+		"name": "Swagger",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "41404095"
+	},
+	"item": [
+		{
+			"name": "Add a new pet",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": {{$randomInt}},\n  \"category\": { \"id\": 1, \"name\": \"dog\" },\n  \"name\": \"{{$randomFirstName}}\",\n  \"photoUrls\": [\"https://example.com/{{$randomFirstName}}.jpg\"],\n  \"tags\": [{ \"id\": 1, \"name\": \"friendly\" }],\n  \"status\": \"available\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseUrl}}/pet"
+			},
+			"response": []
+		},
+		{
+			"name": "Find a pet by ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pet/:petId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet",
+						":petId"
+					],
+					"variable": [
+						{
+							"key": "petId",
+							"value": "144"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update a pet",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let storedPetId = pm.environment.get(\"petId\");",
+							"",
+							"",
+							"const petNames = [\"Rocky\", \"Milo\", \"Luna\", \"Coco\", \"Maggie\", \"Daisy\"];",
+							"pm.environment.set(\"newPetName\", petNames[Math.floor(Math.random() * petNames.length)]);",
+							"",
+							"",
+							"const statuses = [\"available\", \"pending\", \"sold\"];",
+							"pm.environment.set(\"newPetStatus\", statuses[Math.floor(Math.random() * statuses.length)]);",
+							"",
+							"",
+							"pm.environment.set(\"newPhotoUrl\", `https://example.com/${pm.environment.get(\"newPetName\")}.jpg`);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": 144,\n  \"category\": { \"id\": 1, \"name\": \"dog\" },\n  \"name\": \"{{newPetName}}\",\n  \"photoUrls\": [\"{{newPhotoUrl}}\"],\n  \"tags\": [{ \"id\": 1, \"name\": \"cute\" }],\n  \"status\": \"{{newPetStatus}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseUrl}}/pet"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a pet",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pet/:petId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet",
+						":petId"
+					],
+					"variable": [
+						{
+							"key": "petId",
+							"value": "144"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
